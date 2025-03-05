@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Typing Master</title>
+    <link rel="icon" href="https://i.pinimg.com/736x/0e/25/42/0e2542dd832b7290fd9c9faf2d5c1879.jpg">
+    <style>
+        :root {
+            --main-color: #bc13fe;
+            --bg-color: #0a0812;
+            --glass-bg: rgba(15, 10, 29, 0.9);
+        }
+
+        body {
+            background: var(--bg-color);
+            font-family: 'Courier New', monospace;
+            color: #fff;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Logo Styling */
+        .logo-container {
+            position: relative;
+            margin: 2rem;
+            filter: drop-shadow(0 0 20px var(--main-color));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .logo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 3px solid var(--main-color);
+            padding: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        /* Time Selection */
+        .time-selector {
+            display: flex;
+            gap: 1rem;
+            margin: 2rem;
+        }
+
+        .time-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--main-color);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        /* Dynamic Color Picker */
+        .color-picker {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--glass-bg);
+            padding: 1rem;
+            border-radius: 10px;
+        }
+
+        /* Challenge Cards */
+        .challenge-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            padding: 2rem;
+        }
+
+        .challenge-card {
+            background: var(--glass-bg);
+            border: 2px solid var(--main-color);
+            padding: 2rem;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes neon-pulse {
+            0% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Logo Animé -->
+    <div class="logo-container">
+        <img src="https://i.pinimg.com/736x/0e/25/42/0e2542dd832b7290fd9c9faf2d5c1879.jpg" 
+             alt="Typing Master Logo" 
+             class="logo">
+    </div>
+
+    <!-- Sélection de Temps -->
+    <div class="time-selector">
+        <input type="number" id="customTime" min="10" max="300" value="60">
+        <button class="time-btn" onclick="setTime(30)">30s</button>
+        <button class="time-btn" onclick="setTime(60)">60s</button>
+        <button class="time-btn" onclick="setTime(120)">120s</button>
+    </div>
+
+    <!-- Color Picker -->
+    <div class="color-picker">
+        <input type="color" id="themeColor" onchange="updateTheme(this.value)">
+        <label for="themeColor">Choose Theme</label>
+    </div>
+
+    <!-- Challenges Page -->
+    <div class="challenge-grid" id="challengesPage">
+        <div class="challenge-card" data-difficulty="easy">
+            <h3>🌱 Débutant</h3>
+            <p>Textes simples</p>
+            <p>⏱️ Temps illimité</p>
+        </div>
+        
+        <div class="challenge-card" data-difficulty="medium">
+            <h3>⚡ Challenge Rapide</h3>
+            <p>Textes moyens</p>
+            <p>⏱️ 60 secondes</p>
+        </div>
+
+        <div class="challenge-card" data-difficulty="hard">
+            <h3>🔥 Expert Mode</h3>
+            <p>Textes complexes</p>
+            <p>⏱️ 30 secondes</p>
+        </div>
+    </div>
+
+    <script>
+        // Configuration du Thème
+        function updateTheme(color) {
+            document.documentElement.style.setProperty('--main-color', color);
+            document.querySelectorAll('.time-btn, .challenge-card').forEach(el => {
+                el.style.borderColor = color;
+            });
+        }
+
+        // Gestion du Temps
+        let selectedTime = 60;
+        
+        function setTime(seconds) {
+            selectedTime = seconds;
+            document.getElementById('customTime').value = seconds;
+        }
+
+        // Système de Challenges
+        const challenges = {
+            easy: {
+                texts: ["Bonjour!", "Pratiquez ici", "Commencez doucement"],
+                time: null
+            },
+            medium: {
+                texts: ["Le succès vient avec la pratique", "La persévérance est clé"],
+                time: 60
+            },
+            hard: {
+                texts: ["La maîtrise demande du temps et des efforts constants!"],
+                time: 30
+            }
+        };
+
+        // Initialisation
+        document.querySelectorAll('.challenge-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const difficulty = this.dataset.difficulty;
+                launchChallenge(difficulty);
+            });
+        });
+
+        function launchChallenge(difficulty) {
+            const challenge = challenges[difficulty];
+            // Ajouter ici la logique de lancement
+            alert(`Challenge ${difficulty} lancé!`);
+        }
+
+        // Effets Visuels
+        document.addEventListener('mousemove', (e) => {
+            const glow = document.createElement('div');
+            glow.style.cssText = `
+                position: fixed;
+                left: ${e.clientX}px;
+                top: ${e.clientY}px;
+                width: 20px;
+                height: 20px;
+                background: radial-gradient(${getComputedStyle(document.documentElement)
+                    .getPropertyValue('--main-color')}, transparent);
+                pointer-events: none;
+                z-index: 9999;
+            `;
+            document.body.appendChild(glow);
+            setTimeout(() => glow.remove(), 500);
+        });
+    </script>
+</body>
+</html>
